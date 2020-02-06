@@ -1,0 +1,43 @@
+import React from "react";
+import PropType from 'prop-types';
+import Flag from "../assets/flag.png";
+import Mine from "../assets/mine.png";
+
+const propTypes = {
+    controller: PropType.object,
+    handleTopBtnClick: PropType.func,
+    handleBottomBtnClick: PropType.func,
+    selectLevel: PropType.func,
+    handleRadioChange: PropType.func
+}
+
+const Controller = ({
+    controller,
+    getMaxWidth,
+    getPointerEvents,
+    handleClick,
+    handleRightClick
+}) => {
+    return (
+        <div className="playground" style={{ maxWidth: getMaxWidth(controller.bricks, 40), pointerEvents: getPointerEvents() }}>
+            {
+                controller.bricks.map((item, index) => {
+                    return (
+                        <span className={`brick ${item.protection ? 'protection' : ''}`}
+                            key={index}
+                            onClick={() => handleClick(controller, item, index)}
+                            onContextMenu={(e) => handleRightClick(e, item)}>
+                            {item.tagged && <img src={Flag} alt="fl-ag" />}
+                            {item.bombNum === -1 ? <img src={Mine} alt="fl-ag" className="mine"/> : <span >{item.bombNum ? item.bombNum : ''}</span>}
+                        </span>
+                    )
+                })
+            }
+        </div>
+    )
+}
+
+// Controller.defaultProps = defaultProps;
+Controller.propTypes = propTypes;
+
+export default Controller;
