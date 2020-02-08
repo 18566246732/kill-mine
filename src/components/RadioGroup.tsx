@@ -1,45 +1,35 @@
-import React, { Component } from "react";
+import React from "react";
+import { State } from "./Homepage";
 
-class RadioGroup extends Component {
-    constructor() {
+interface Props extends React.Props<any> {
+    controller: State,
+    handleRadioChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+}
 
-    }
-    render() {
-        return (
-            <div className="row align-items-center justify-content-between radio-group">
-                {
-                    this.state.controller.radios.map((item, index) => {
-                        return (
-                            <span key={index}>
-                                <label htmlFor={item.value}
-                                    style={{ cursor: 'pointer' }}
-                                    className={ this.state.controller.isDisabled ? 'disable' : '' }>
-                                    <input disabled={this.state.controller.isDisabled}
-                                        type="radio"
-                                        id={item.value}
-                                        value={item.value}
-                                        checked={+item.value === +this.state.controller.picked}
-                                        onChange={(e) => {
-                                            console.log(e, 'e-----', e.type);
-                                            
-                                            // TODO: why ?
-                                            e.persist();
-
-                                            const newController = Object.assign({}, this.state.controller, {picked: e.target.value});
-
-                                            this.setState({
-                                                controller: newController
-                                            })
-                                            this.state.fsm.reset(newController)
-                                        }}
-                                        style={{ cursor: 'pointer' }} />
-                                    {item.type}
-                                </label>
-                            </span>
-                        )
-                    })
-                }
-            </div>
-        )
-    }
+export const RadioGroup = ({
+    controller,
+    handleRadioChange
+}: Props) => {
+    return (<div className="row align-items-center justify-content-between radio-group">)
+        {
+            controller.radios.map((item, index) => {
+                return (
+                    <span key={index}>
+                        <label htmlFor={item.value.toString()}
+                            style={{ cursor: 'pointer' }}
+                            className={controller.isDisabled ? 'disable' : ''}>
+                            <input disabled={controller.isDisabled}
+                                type="radio"
+                                id={item.value.toString()}
+                                value={item.value}
+                                checked={+item.value === +controller.picked}
+                                onChange={(e) => handleRadioChange(e)}
+                                style={{ cursor: 'pointer' }} />
+                            {item.type}
+                        </label>
+                    </span>
+                )
+            })
+        }
+    </div>)
 }

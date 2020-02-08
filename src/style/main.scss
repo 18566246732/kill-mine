@@ -1,0 +1,58 @@
+// @import './bootstrap-grid.min.css';
+// @import './bootstrap.min.css';
+
+$brick_basis: 40px;
+
+.brick {
+  height: $brick_basis;
+  width: $brick_basis;
+  line-height: $brick_basis;  
+  display: inline-block;
+  border: 2px solid;
+  border-color: grey;
+  float: left;
+  &.protection {
+    border-color: white black black white;
+    cursor: pointer;
+    background: grey;
+    &:hover {
+      background: rgb(216, 206, 206);
+    }
+    span {
+      position: relative;
+      z-index: -1;
+    }
+    img.mine {
+      z-index: -1;
+      position: relative;
+    }
+  }
+}
+.playground {
+  background: grey;
+  display: inline-block;
+  padding: 10px;
+  box-sizing: content-box;
+  font-size: 16px;
+}
+
+.setting-panel {
+    position: relative; 
+    height: 100%;
+  }
+  .row {
+    margin-bottom: 20px;
+    .radio-group label{
+      margin-bottom: 0;
+    }
+    &.btn-group {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      margin-bottom: 0;    
+    }
+  }
+  .disable {
+    pointer-events: none;
+  }
+

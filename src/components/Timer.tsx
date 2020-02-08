@@ -1,51 +1,52 @@
-import React, { Component } from "react";
-import { FsmContext } from "./context";
+import React, { Component, Dispatch } from "react";
+import { FsmContext, ContextProps } from "./context";
 import { connect } from "react-redux";
 import { reducerAction } from "../redux/action/reducer";
-let timer = null;
+import { ReduxState } from "../redux/store";
+
+let timer: null | NodeJS.Timeout = null;
+const initialState = {
+    counter: 0,
+};
+
+type State = Readonly<typeof initialState>;
 
 class Timer extends Component {
     static contextType = FsmContext;
-    constructor(props, context) {
-        
-        super(props, context);
-        this.state = {
-            counter: 0,
-        };
-        this.startTimer = this.startTimer.bind(this);
-    }
+    state: State = initialState;
     init() {
     }
     componentDidMount() {
+        this.startTimer = this.startTimer.bind(this);
     }
-    componentDidUpdate(...args) {
+    componentDidUpdate() {
     }
 
-    UNSAFE_componentWillReceiveProps(nextProps, nextContext) {
+    UNSAFE_componentWillReceiveProps(nextProps: React.Props<any>, nextContext: ContextProps) {
         switch (nextContext.fsm.state) {
             case 'on':
                 this.startTimer();
                 break;
             case 'pause':
-                clearTimeout(timer);
+                timer && clearTimeout(timer);
                 // throw new Error('oops...');
                 break;
             case 'init':
                 this.setState({
                     counter: 0
                 })
-                clearTimeout(timer);
+                timer && clearTimeout(timer);
                 break;
             case 'over':
-                clearTimeout(timer);
+                timer && clearTimeout(timer);
                 break;
             default:
                 break;
         }
     }
-    shouldComponentUpdate(nextProps, nextState, nextContext) {
-        return true;
-    }
+    // shouldComponentUpdate(nextProps, nextState, nextContext) {
+    //     return true;
+    // }
     startTimer() {
 
         timer = setTimeout(() => {
@@ -66,15 +67,13 @@ class Timer extends Component {
     }
 }
 
-const mapStateToProps = state => {
-    console.log(state, 'state');
-    
+const mapStateToProps = (state: ReduxState) => {
     return {
         reducers: state.reducers
     }
 };
 
-const mapDispatchToProps = dispath => ({
+const mapDispatchToProps = (dispath: Dispatch<{type: string}>) => ({
     increase: () => dispath(reducerAction.increase())
 })
 

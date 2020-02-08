@@ -41,7 +41,7 @@ const initialState = {
 };
 
 // 让类型有唯一源头
-type State = Readonly<typeof initialState>;
+export type State = Readonly<typeof initialState>;
 
 export class Homepage extends Component {
     readonly state: State = initialState;
@@ -126,8 +126,9 @@ export class Homepage extends Component {
         brick.tagged = false
         return remainingBombs
     }
-    startTimer(count: number, interval = 1000) {
-        const newCount = count + 1;
+    startTimer(interval = 1000) {
+        const newCount = this.state.counter;
+
         const timer = setTimeout(() => {
             this.startTimer(newCount)
         }, interval)
@@ -136,9 +137,9 @@ export class Homepage extends Component {
             timer
         })
     }
-    handleTopBtnClick(controller) {
+    handleTopBtnClick() {
 
-        const stateActionMap = {
+        const stateActionMap: {[state: string]: any} = {
             over: {
                 action: 'restart',
                 cb: this.startTimer
@@ -156,24 +157,29 @@ export class Homepage extends Component {
                 cb: this.startTimer
             }
         }
-        const actionObj = stateActionMap[fsm.state]
-        fsm[actionObj.action](controller, actionObj.cb)
-        this.setState({controller})
+        const actionObj= stateActionMap[fsm.state];
+
+        fsm[actionObj.action](this.state, this.setState.bind(this), actionObj.cb)
+        // this.setState({controller})
     }
-    handleBottomBtnClick(controller) {
+    handleBottomBtnClick() {
         if (fsm.state !== 'init') {
-            const res = fsm.reset(controller);
-            this.setState({controller});
-            return res;
+            this.reset();
+            // const res = this.reset(this.state, this.setState.bind(this));
+            // // this.setState({controller});
+            // return res;
         }
     }
-    handleRightClick(e, item) {
+    handleRightClick(e: React.MouseEvent, item: Brick) {
         e.preventDefault();
                                                 
+        // this.setState({
+        //     controller: Object.assign({}, this.state.controller, {
+        //         remainingBombs: this.tagBrick(item, this.state.controller.remainingBombs)
+        //     })
+        // })
         this.setState({
-            controller: Object.assign({}, this.state.controller, {
-                remainingBombs: this.tagBrick(item, this.state.controller.remainingBombs)
-            })
+            remainingBombs: this.tagBrick(item, this.state.remainingBombs)
         })
     }
     getPointerEvents() {
@@ -197,15 +203,18 @@ export class Homepage extends Component {
         this.setState({
             picked: e.target.value
         })
-        fsm.reset(newController)
+        this.reset()
     }
     timer() {
         return new Date()
     }
+    reset() {
+        fsm.reset(this.state, this.setState.bind(this));
+    }
     componentDidMount() {
         console.log('did mount');
         
-        fsm.reset(this.state)
+        this.reset()
 
         this.setState({
             controller: this.state

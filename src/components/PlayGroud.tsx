@@ -2,6 +2,8 @@ import React from "react";
 import PropType from 'prop-types';
 import Flag from "../assets/flag.png";
 import Mine from "../assets/mine.png";
+import { State } from "./Homepage";
+import { Brick } from "./playGroudMaker";
 
 const propTypes = {
     controller: PropType.object,
@@ -11,13 +13,21 @@ const propTypes = {
     handleRadioChange: PropType.func
 }
 
+interface Props extends React.Props<any> {
+    controller: State,
+    getMaxWidth: (bricks: Brick[], BRICK_BASIS: number) => string,
+    getPointerEvents: () => 'auto' | 'none',
+    handleClick: (state: State, brick: Brick, index: number) => number,
+    handleRightClick: (e: React.MouseEvent, item: Brick) => void
+}
+
 const Controller = ({
     controller,
     getMaxWidth,
     getPointerEvents,
     handleClick,
     handleRightClick
-}) => {
+}: Props) => {
     return (
         <div className="playground" style={{ maxWidth: getMaxWidth(controller.bricks, 40), pointerEvents: getPointerEvents() }}>
             {

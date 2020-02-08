@@ -20,10 +20,11 @@ export default new StateMachine({
         onTransition(fsm) {
             console.log(fsm, 'fsm------------');
         },
-        onReset(fsm, controller, callback) {
+        onReset(fsm, state, setState, callback) {
             console.log('------>executing reset');
 
-            const { bricks, totalBomb } = playgroudMaker.createBricks(controller.picked)
+            const { bricks, totalBomb } = playgroudMaker.createBricks(state.picked);
+            const controller = {};
             controller.bricks = bricks
             controller.remainingBombs = totalBomb
             controller.nonBombBrickNum = bricks.length - totalBomb
@@ -31,58 +32,65 @@ export default new StateMachine({
             controller.counter = 0
             controller.btnText = '开始游戏'
             controller.btnColor = 'primary'
-            clearTimeout(controller.timer)
-            if(callback) callback(controller)
+            setState(controller);
+
+            clearTimeout(state.timer)
+            if(callback) callback()
 
             console.log('<------game init');
         },
-        onBreak(fsm, controller, callback) {
+        onBreak(fsm, state, setState, callback) {
             console.log('------>executing break');
 
-            clearTimeout(controller.timer)
+            clearTimeout(state.timer)
+            const controller = {};
             controller.timer = null;
             controller.btnText = '继续游戏'
             controller.btnColor = 'warning'
-            if(callback) callback(controller)
+            setState(controller);
+            if(callback) callback()
 
             console.log('<------game pausing');
         },
-        onResume(fsm, controller, callback) {
+        onResume(fsm, state, setState, callback) {
             console.log('------>executing resume');
-            
+            const controller = {};
             controller.btnText = '暂停游戏'
             controller.btnColor = 'success'
-            if (callback) callback(controller)
+            setState(controller);
+            if (callback) callback()
             
             console.log('<------game on');
         },
-        onStart(fsm, controller, callback) {
+        onStart(fsm, state, setState, callback) {
             console.log('------>executing start');
-
-
+            const controller = {};
             controller.isDisabled = true
             controller.counter = 0
             controller.btnText = '暂停游戏'
             controller.btnColor = 'success'
-            if(callback) callback(controller)
+            setState(controller);
+            if(callback) callback()
             
             console.log('<------game on');
         },
-        onFinish(fsm, controller, callback) {
+        onFinish(fsm, state, setState, callback) {
             console.log('------>executing finish');
-
+            const controller = {};
             controller.isDisabled = true
             controller.btnText = '重新开始'
             controller.btnColor = 'secondary'
-            clearTimeout(controller.timer)
-            if(callback) callback(controller)
+            setState(controller);
+            clearTimeout(state.timer)
+            if(callback) callback()
             
             console.log('<------game over');
         },
-        onRestart(fsm, controller, callback) {
+        onRestart(fsm, state, setState, callback) {
             console.log('------>executing restart');
 
-            const { bricks, totalBomb } = playgroudMaker.createBricks(controller.picked)
+            const { bricks, totalBomb } = playgroudMaker.createBricks(state.picked)
+            const controller = {};
             controller.bricks = bricks
             controller.remainingBombs = totalBomb
             controller.nonBombBrickNum = bricks.length - totalBomb
@@ -90,7 +98,8 @@ export default new StateMachine({
             controller.counter = 0
             controller.btnText = '暂停游戏'
             controller.btnColor = 'success'
-            if(callback) callback(controller)
+            setState(controller);
+            if(callback) callback()
             
             console.log('<------game restart');
         }

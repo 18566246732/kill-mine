@@ -1,13 +1,15 @@
 import React from "react";
 
+const initialState = {
+    hasError: false
+}
+
+type State = Readonly<typeof initialState>;
+
 export class ErrorBoundary extends React.Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            hasError: false
-        }
-    }
-    static getDerivedStateFromError(error) {
+    state: State = initialState;
+
+    static getDerivedStateFromError() {
         return {
             hasError: true
         }
