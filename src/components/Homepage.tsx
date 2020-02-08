@@ -47,7 +47,6 @@ export class Homepage extends Component {
     readonly state: State = initialState;
     constructor(props: any) {
         super(props);
-        this.startTimer = this.startTimer.bind(this);
         this.onRenderCallback = this.onRenderCallback.bind(this);
     }
     handleClick(state: State, brick: Brick, index: number) {
@@ -126,41 +125,25 @@ export class Homepage extends Component {
         brick.tagged = false
         return remainingBombs
     }
-    startTimer(interval = 1000) {
-        const newCount = this.state.counter;
-
-        const timer = setTimeout(() => {
-            this.startTimer(newCount)
-        }, interval)
-        this.setState({
-            counter: newCount + 1,
-            timer
-        })
-    }
     handleTopBtnClick() {
 
         const stateActionMap: {[state: string]: any} = {
             over: {
-                action: 'restart',
-                cb: this.startTimer
+                action: 'restart'
             },
             on: {
-                action: 'break',
-                cb: null
+                action: 'break'
             },
             pause: {
-                action: 'resume',
-                cb: this.startTimer
+                action: 'resume'
             },
             init: {
-                action: 'start',
-                cb: this.startTimer
+                action: 'start'
             }
         }
         const actionObj= stateActionMap[fsm.state];
 
-        fsm[actionObj.action](this.state, this.setState.bind(this), actionObj.cb)
-        // this.setState({controller})
+        fsm[actionObj.action](this.state, this.setState.bind(this))
     }
     handleBottomBtnClick() {
         if (fsm.state !== 'init') {

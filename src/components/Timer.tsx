@@ -23,13 +23,16 @@ class Timer extends Component {
     }
 
     UNSAFE_componentWillReceiveProps(nextProps: React.Props<any>, nextContext: ContextProps) {
+        console.log('props received');
+        
         switch (nextContext.fsm.state) {
             case 'on':
+                console.log('on------');
+                
                 this.startTimer();
                 break;
             case 'pause':
                 timer && clearTimeout(timer);
-                // throw new Error('oops...');
                 break;
             case 'init':
                 this.setState({

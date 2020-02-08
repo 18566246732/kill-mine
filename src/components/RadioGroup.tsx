@@ -10,7 +10,7 @@ export const RadioGroup = ({
     controller,
     handleRadioChange
 }: Props) => {
-    return (<div className="row align-items-center justify-content-between radio-group">)
+    return (<div className="row align-items-center justify-content-between radio-group">
         {
             controller.radios.map((item, index) => {
                 return (
