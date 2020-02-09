@@ -3,8 +3,6 @@ const initialState = {
 };
 
 export default function nonBombNum(state = initialState, action: {type: string}) {
-    console.log('1111111', action, state);
-    
     switch (action.type) {
         case 'decrease':
             return {

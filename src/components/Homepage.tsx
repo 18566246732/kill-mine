@@ -1,5 +1,5 @@
 import React, { Component, Profiler } from 'react';
-import fsm from './fsm.js';
+import fsm from './fsm';
 import Controller from "./Controller";
 import PlayGroud from "./PlayGroud";
 import { Brick } from "./playGroudMaker";
@@ -26,7 +26,7 @@ const initialState = {
             type: '高级'
         }
     ],
-    timer: null,
+    timer: setTimeout(() => {}, 0),
     counter: 0,
     isDisabled: false,
     btnText: '开始游戏',
@@ -195,8 +195,6 @@ export class Homepage extends Component {
         fsm.reset(this.state, this.setState.bind(this));
     }
     componentDidMount() {
-        console.log('did mount');
-        
         this.reset()
 
         this.setState({
@@ -204,11 +202,9 @@ export class Homepage extends Component {
         })
     }
     onRenderCallback(...args: any) {
-        console.log(args, 'args');
+        // console.log(args, 'args');
     }
     render() {
-        console.log('render home');
-        
         if (this.state.nonBombBrickNum === 0) {
             this.state.bricks.forEach(brick => {
                 brick.protection = false
