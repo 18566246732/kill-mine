@@ -25,7 +25,6 @@ export default new StateMachine({
         },
         onReset(fsm: any, state: State, setState: (state: any) => void) {
             console.log('------>executing reset');
-
             const { bricks, totalBomb } = playgroudMaker.createBricks(state.picked);
             const controller = {} as Partial<Writeable<State>>;
             controller.bricks = bricks
@@ -96,7 +95,6 @@ export default new StateMachine({
             controller.btnText = '暂停游戏'
             controller.btnColor = 'success'
             setState(controller);
-            
             console.log('<------game restart');
         }
     }

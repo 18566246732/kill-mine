@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { reducerAction } from "../redux/action/reducer";
 import { ReduxState } from "../redux/store";
 
-let timer: null | NodeJS.Timeout = null;
+let timer: NodeJS.Timeout = setTimeout(() => {}, 0);
 const initialState = {
     counter: 0,
 };
@@ -23,25 +23,24 @@ class Timer extends Component {
     }
 
     UNSAFE_componentWillReceiveProps(nextProps: React.Props<any>, nextContext: ContextProps) {
-        console.log('props received');
+        console.log('props received', nextContext);
         
         switch (nextContext.fsm.state) {
             case 'on':
-                console.log('on------');
-                
+                clearTimeout(timer);
                 this.startTimer();
                 break;
             case 'pause':
-                timer && clearTimeout(timer);
+                clearTimeout(timer);
                 break;
             case 'init':
                 this.setState({
                     counter: 0
                 })
-                timer && clearTimeout(timer);
+                clearTimeout(timer);
                 break;
             case 'over':
-                timer && clearTimeout(timer);
+                clearTimeout(timer);
                 break;
             default:
                 break;

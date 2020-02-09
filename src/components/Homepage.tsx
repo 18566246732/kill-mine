@@ -59,10 +59,7 @@ export class Homepage extends Component {
                 brick.tagged = false
             })
             alert('失败！ 游戏结束')
-            fsm.finish(this.state)
-            this.setState({
-                nonBombBrickNum
-            })
+            fsm.finish(this.state, this.setState.bind(this))
             return nonBombBrickNum
         }
 
@@ -171,25 +168,10 @@ export class Homepage extends Component {
     getMaxWidth(bricks: Brick[], BRICK_BASIS: number) {
         return Math.sqrt(bricks.length) * BRICK_BASIS + 'px';
     }
-    // don't use React.FromEvent
     handleRadioChange(e: React.ChangeEvent<HTMLInputElement>) {
-        // e.persist();
-        console.log(e, 'e', e.target);
-        
-
-        // setTimeout(() => {
-        //     console.log(e, 'e', e.type);
-        // }, 0);
-    
-        // const newController = Object.assign({}, this.state, {picked: e.target.value});
-
         this.setState({
             picked: e.target.value
-        })
-        this.reset()
-    }
-    timer() {
-        return new Date()
+        },() => this.reset())
     }
     reset() {
         fsm.reset(this.state, this.setState.bind(this));
@@ -211,7 +193,7 @@ export class Homepage extends Component {
                 brick.tagged = false
             });
             alert('恭喜你！ 已通过')
-            fsm.finish(this.state)
+            fsm.finish(this.state, this.setState.bind(this))
         }
         
         return (
