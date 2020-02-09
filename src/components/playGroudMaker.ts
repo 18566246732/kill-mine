@@ -5,7 +5,7 @@ export type Brick = {
 }
 
 class PlaygroudMaker {
-  createBricks(num = 10, totalBombRate = 0.1) {
+  createBricks(num = 10, totalBombRate = 0.01) {
       const brick: Brick = {
           bombNum: 0, // 周围雷的数量，-1表示自己是雷，0-8表示自己不是雷
           tagged: false, // 右键标记

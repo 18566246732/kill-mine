@@ -1,12 +1,14 @@
 import { createStore, combineReducers } from 'redux'
 // import { syncHistoryWithStore, routerReducer } from 'react-router-redux'
 
-import reducers from './reducer/reducer'
-import anotherReducer from './reducer/anotherReducer'
+import totalGame from './reducer/totalGame'
+import winGame from './reducer/winGame'
+// import anotherReducer from './reducer/anotherReducer'
 
 const reduxState = {
-  reducers,
-  anotherReducer
+  totalGame,
+  winGame
+  // anotherReducer
   // routing: routerReducer
 }
 
@@ -21,5 +23,8 @@ const store = createStore(
 store.subscribe(() => {
   console.log(store.getState(), 'state ------')
 })
+
+console.log(store, 'store');
+
 
 export default store;

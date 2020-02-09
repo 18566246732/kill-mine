@@ -1,9 +1,14 @@
-import React, { Component, Profiler } from 'react';
+import React, { Component, Profiler, Dispatch } from 'react';
 import fsm from './fsm';
 import Controller from "./Controller";
 import PlayGroud from "./PlayGroud";
 import { Brick } from "./playGroudMaker";
 import { FsmContext } from "./context";
+import { ReduxState } from '../redux/store';
+import { bindActionCreators } from "redux";
+// import { reducerAction } from "../redux/action/reducer";
+import * as action from "../redux/action";
+import { connect } from 'react-redux';
 
 export type Radio = {
     value: number,
@@ -40,10 +45,38 @@ const initialState = {
     }]
 };
 
+type Props = {
+    totalGame: {
+        totalGameCount: number
+    },
+    winGame: {
+        winGameCount: number
+    }
+    increaseTotalGameCount: () => void,
+    increaseWinGameCount: () => void,
+}
+
 // 让类型有唯一源头
 export type State = Readonly<typeof initialState>;
 
-export class Homepage extends Component {
+@(connect(
+    (state: ReduxState) => ({
+        totalGame: state.totalGame,
+        winGame: state.winGame
+    }),
+    // (dispatch: Dispatch<{type: string}>) => ({
+    //     increaseTotalGameCount() {
+    //         dispatch(increaseTotalGameCount())
+    //     },
+    //     decreaseTotalGameCount() {
+    //         dispatch(decreaseTotalGameCount())
+    //     }
+    // })
+    (dispatch) => bindActionCreators(action, dispatch)
+) as any)
+
+// @(connectTotalGame as any)
+export class Homepage extends Component<Partial<Props>, State> {
     readonly state: State = initialState;
     constructor(props: any) {
         super(props);
@@ -139,25 +172,20 @@ export class Homepage extends Component {
             }
         }
         const actionObj= stateActionMap[fsm.state];
+        if (actionObj.action === 'restart') {
+            this.props.increaseTotalGameCount && this.props.increaseTotalGameCount();
+        }
 
         fsm[actionObj.action](this.state, this.setState.bind(this))
     }
     handleBottomBtnClick() {
         if (fsm.state !== 'init') {
             this.reset();
-            // const res = this.reset(this.state, this.setState.bind(this));
-            // // this.setState({controller});
-            // return res;
+            this.props.increaseTotalGameCount && this.props.increaseTotalGameCount();
         }
     }
     handleRightClick(e: React.MouseEvent, item: Brick) {
         e.preventDefault();
-                                                
-        // this.setState({
-        //     controller: Object.assign({}, this.state.controller, {
-        //         remainingBombs: this.tagBrick(item, this.state.controller.remainingBombs)
-        //     })
-        // })
         this.setState({
             remainingBombs: this.tagBrick(item, this.state.remainingBombs)
         })
@@ -170,7 +198,7 @@ export class Homepage extends Component {
     }
     handleRadioChange(e: React.ChangeEvent<HTMLInputElement>) {
         this.setState({
-            picked: e.target.value
+            picked: +e.target.value
         },() => this.reset())
     }
     reset() {
@@ -178,28 +206,33 @@ export class Homepage extends Component {
     }
     componentDidMount() {
         this.reset()
-
-        this.setState({
-            controller: this.state
-        })
     }
-    onRenderCallback(...args: any) {
-        // console.log(args, 'args');
-    }
-    render() {
-        if (this.state.nonBombBrickNum === 0) {
+    componentDidUpdate() {
+        if (this.state.nonBombBrickNum === 0 && fsm.state !== 'over') {
             this.state.bricks.forEach(brick => {
                 brick.protection = false
                 brick.tagged = false
             });
             alert('恭喜你！ 已通过')
-            fsm.finish(this.state, this.setState.bind(this))
+            this.props.increaseWinGameCount && this.props.increaseWinGameCount();
+            this.finish();
         }
-        
+
+    }
+    onRenderCallback(...args: any) {
+        // console.log(args, 'args');
+    }
+    finish() {
+        fsm.finish(this.state, this.setState.bind(this))
+    }
+    render() {
         return (
             <div className="container bg-info p-2 pt-4 text-white" style={{ paddingBottom: '40px !important' }}>
                 <div className="row justify-content-center">
-                    {/* <TestMemo /> */}
+                    <div className="p-4">总局数：{this.props.totalGame && this.props.totalGame.totalGameCount}</div>
+                    <div className="p-4">胜局数：{this.props.winGame && this.props.winGame.winGameCount}</div>
+                </div>
+                <div className="row justify-content-center">
                     {/* <React.StrictMode> */}
                     <div style={{ fontSize: 0 }}>
 
@@ -230,4 +263,19 @@ export class Homepage extends Component {
     }
 }
 
-// export default Homepage;
+// const mapStateToProps = (state: ReduxState) => {
+//     return {
+//         totalGame: state.totalGame
+//     }
+// }
+
+// const mapDispatchToProps = (dispath: Dispatch<{type: string}>) => {
+//     return {
+//         increase: () => dispath(reducerAction.increase())
+//     }
+// }
+
+// export default connect(
+//     mapStateToProps,
+//     mapDispatchToProps
+// )(Homepage);

@@ -1,8 +1,5 @@
-import React, { Component, Dispatch } from "react";
+import React, { Component } from "react";
 import { FsmContext, ContextProps } from "./context";
-import { connect } from "react-redux";
-import { reducerAction } from "../redux/action/reducer";
-import { ReduxState } from "../redux/store";
 
 let timer: NodeJS.Timeout = setTimeout(() => {}, 0);
 const initialState = {
@@ -64,23 +61,25 @@ class Timer extends Component {
                 <span>持续时间: <span>{this.state.counter} </span>秒</span>
             </div>,
             // <div key={2}>test: {this.props.reducers.coinNum}</div>,
-            // <button onClick={this.props.increase} key={3}>change test</button>
+            // <button onClick={this.props.reducers} key={3}>change test</button>
         ];
     }
 }
 
-const mapStateToProps = (state: ReduxState) => {
-    return {
-        reducers: state.reducers
-    }
-};
+// const mapStateToProps = (state: ReduxState) => {
+//     return {
+//         reducers: state.totalGame
+//     }
+// };
 
-const mapDispatchToProps = (dispath: Dispatch<{type: string}>) => ({
-    increase: () => dispath(reducerAction.increase())
-})
+// const mapDispatchToProps = (dispath: Dispatch<{type: string}>) => ({
+//     increase: () => dispath(reducerAction.increase())
+// })
 
-// export default ReactDelayRender({delay: 3000})(Timer);
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(Timer);
+// // export default ReactDelayRender({delay: 3000})(Timer);
+// export default connect(
+//     mapStateToProps,
+//     mapDispatchToProps
+// )(Timer);
+
+export default Timer;
