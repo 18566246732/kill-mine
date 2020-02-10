@@ -227,8 +227,8 @@ export class Homepage extends Component<Partial<Props>, State> {
     }
     render() {
         return (
-            <div className="container bg-info p-2 pt-4 text-white" style={{ paddingBottom: '40px !important' }}>
-                <div className="row justify-content-center">
+            <div className="container bg-info p-0 pb-2 text-white" style={{ paddingBottom: '40px !important' }}>
+                <div className="row bg-dark justify-content-center m-0 mb-4">
                     <div className="p-4">总局数：{this.props.totalGame && this.props.totalGame.totalGameCount}</div>
                     <div className="p-4">胜局数：{this.props.winGame && this.props.winGame.winGameCount}</div>
                 </div>
