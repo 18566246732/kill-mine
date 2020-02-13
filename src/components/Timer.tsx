@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { FsmContext, ContextProps } from "./context";
 
-let timer: NodeJS.Timeout = setTimeout(() => {}, 0);
+let timer: any = setTimeout(() => {}, 0);
 const initialState = {
     counter: 0,
 };
